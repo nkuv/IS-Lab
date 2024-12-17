@@ -1,2 +1,2 @@
 # IS-Lab
-KTU Information Security Lab 
+Information Security Lab 
