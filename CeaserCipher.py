@@ -9,22 +9,16 @@ def ceaser_encrypt(text,key):
             encrypted += char
     return encrypted
 
-def ceaser_bruteforce(ciphertext):
-    for key in range(26):
-        print(f"Key {key} : {ceaser_encrypt(ciphertext,-key)}")
-
 plaintext = input("Enter a plaintext: ")
-key = input("Enter shift parameter: ")
+key = int(input("Enter shift parameter: "))
 ciphertext = ceaser_encrypt(plaintext,key)
 print("Encrypted Text:",ciphertext)
 
 ciphertext = input("\nEnter a ciphertext: ")
-key = input("Enter shift parameter: ")
+key = int(input("Enter shift parameter: "))
 plaintext = ceaser_encrypt(ciphertext,-key)
 print("Decrypted Text:",plaintext)
 
-print("\nBrute force attack result: ")
-ceaser_bruteforce(ciphertext)
 
 
 
