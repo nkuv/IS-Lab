@@ -14,11 +14,12 @@ def ceaser_bruteforce(ciphertext):
         print(f"Key {key} : {ceaser_encrypt(ciphertext,-key)}")
 
 plaintext = input("Enter a plaintext: ")
-key = 3
+key = input("Enter shift parameter: ")
 ciphertext = ceaser_encrypt(plaintext,key)
 print("Encrypted Text:",ciphertext)
 
 ciphertext = input("\nEnter a ciphertext: ")
+key = input("Enter shift parameter: ")
 plaintext = ceaser_encrypt(ciphertext,-key)
 print("Decrypted Text:",plaintext)
 
