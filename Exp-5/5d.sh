@@ -1,6 +1,6 @@
 #!/bin/bash
 
-HASH_FILE=".file_hashes.txt"
+HASH_FILE="hashes.txt"
 
 create_hash() {
     echo "Generating hashes..."
@@ -24,14 +24,8 @@ check_integrity() {
 }
 
 case "$1" in
-    create)
-        create_hash
-        ;;
-    check)
-        check_integrity
-        ;;
-    *)
-        echo "Usage: $0 [create|check]"
-        exit 1
-        ;;
+    create) create_hash ;;
+    check) check_integrity ;;
+    *) echo "Usage: $0 [create|check]"; exit 1 ;;
 esac
+
