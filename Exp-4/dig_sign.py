@@ -1,50 +1,30 @@
 import hashlib
-import secrets
+import sympy 
 import math
 
-def miller_rabin(n, k=5):
-    if n <= 1:
-        return False
-    elif n <= 3:
-        return True
-    # Write n-1 as d * 2^s
-    d = n - 1
-    s = 0
-    while d % 2 == 0:
-        d //= 2
-        s += 1
-    for _ in range(k):
-        a = secrets.randbelow(n-3) + 2
-        x = pow(a, d, n)
-        if x == 1 or x == n - 1:
-            continue
-        for __ in range(s-1):
-            x = pow(x, 2, n)
-            if x == n - 1:
-                break
-        else:
-            return False
-    return True
+# Function to generate a 256-bit prime using sympy
+def generate_prime(bits=256):
+    # Define the range for a 256-bit number
+    lower_bound = 2**(bits - 1)
+    upper_bound = 2**bits - 1
+    
+    # Generate a random prime number within this range using sympy's randprime
+    prime = sympy.randprime(lower_bound, upper_bound)
+    return prime
 
-def generate_prime(bits):
-    while True:
-        candidate = secrets.randbits(bits)
-        candidate |= (1 << (bits - 1))  # Ensure high bit is set
-        candidate |= 1  # Ensure odd
-        if miller_rabin(candidate):
-            return candidate
-
+# RSA key generation with 256-bit prime
 def rsa_key_generation():
-    p = generate_prime(129)
-    q = generate_prime(129)
+    p = generate_prime(128)  # Generate a 256-bit prime for p
+    q = generate_prime(128)  # Generate a 256-bit prime for q
     n = p * q
-    phi = (p-1) * (q-1)
+    phi = (p - 1) * (q - 1)
     e = 65537
     while math.gcd(e, phi) != 1:
         e += 2
     d = pow(e, -1, phi)
     return (e, n), (d, n)
 
+# Signing the message
 def sign_message(message, private_key):
     d, n = private_key
     hash_bytes = hashlib.sha256(message.encode()).digest()
@@ -52,6 +32,7 @@ def sign_message(message, private_key):
     signature = pow(hash_int, d, n)
     return hash_bytes.hex(), signature
 
+# Verifying the signature
 def verify_signature(message, signature, public_key):
     e, n = public_key
     hash_bytes = hashlib.sha256(message.encode()).digest()
