@@ -12,9 +12,9 @@ int main() {
     ssize_t n;
 
     printf("Enter source filename: ");
-    scanf("%99s", src_name);
+    scanf("%s", src_name);
     printf("Enter target filename: ");
-    scanf("%99s", dst_name);
+    scanf("%s", dst_name);
 
     if ((src = open(src_name, O_RDONLY)) < 0) {
         perror("Error opening source file");
