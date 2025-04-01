@@ -1,10 +1,7 @@
 #!/bin/bash
 
-read -p "Enter the path of the file to block execution: " filepath
-
+read -p "Enter filepath to deny execution: " filepath
 if [ -f "$filepath" ]; then
     chmod a-x "$filepath"
-    echo "Execute permission removed for $filepath."
-else
-    echo "Error: File not found."
+    echo "Execute permission removed for $filepath"
 fi

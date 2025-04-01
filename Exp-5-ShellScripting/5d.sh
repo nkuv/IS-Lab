@@ -1,31 +1,21 @@
 #!/bin/bash
 
-HASH_FILE="hashes.txt"
+hash_db="hashes.txt" 
 
-create_hash() {
-    echo "Generating hashes..."
-    find . -type f -not -name "$HASH_FILE" -exec sha256sum {} \; > "$HASH_FILE"
-    echo "Hashes saved to $HASH_FILE."
+create_hashes() {
+    sha256sum * > "$hash_db"
 }
 
-check_integrity() {
-    echo "Checking integrity..."
-    if [ ! -f "$HASH_FILE" ]; then
-        echo "Error: Hash file not found. Run the script in create mode first."
-        exit 1
-    fi
-
-    sha256sum -c "$HASH_FILE" 2>/dev/null
-    if [ $? -eq 0 ]; then
-        echo "All files are unchanged."
-    else
-        echo "WARNING: Some files have been modified!"
-    fi
+check_files() {
+    sha256sum -c "$hash_db" 
 }
 
-case "$1" in
-    create) create_hash ;;
-    check) check_integrity ;;
-    *) echo "Usage: $0 [create|check]"; exit 1 ;;
+case $1 in
+    create) create_hashes ;;
+    check)  check_files ;;
 esac
 
+
+# ./5d.sh create     # Generate hashes
+# ./5d.sh check      # Verify file integrity
+# hashes.txt is output file
