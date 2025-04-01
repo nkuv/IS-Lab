@@ -1,44 +1,30 @@
-#include <fcntl.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
+// Write a C program that reads text from a file and writes it to a new file using system calls open, read, and write. 
+// Do not use the standard library functions fopen or fgets.
 
-#define BUFSIZE 1024
+#include<fcntl.h>
+#include<unistd.h>
+#include<stdio.h>
+
+#define BUF_SIZE 1024
 
 int main() {
-    int src, dst;
-    char src_name[100], dst_name[100];
-    char buf[BUFSIZE];
-    ssize_t n;
+    char buffer[BUF_SIZE], src_name[100], dst_name[100];
 
     printf("Enter source filename: ");
     scanf("%s", src_name);
     printf("Enter target filename: ");
     scanf("%s", dst_name);
 
-    if ((src = open(src_name, O_RDONLY)) < 0) {
-        perror("Error opening source file");
-        exit(EXIT_FAILURE);
-    }
-    if ((dst = open(dst_name, O_WRONLY | O_CREAT | O_TRUNC, 0644)) < 0) {
-        perror("Error opening target file");
-        close(src);
-        exit(EXIT_FAILURE);
-    }
+    int src = open(src_name, O_RDONLY);
+    int dst = open(dst_name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 
-    while ((n = read(src, buf, BUFSIZE)) > 0)
-        if (write(dst, buf, n) != n) {
-            perror("Error writing to target file");
-            close(src);
-            close(dst);
-            exit(EXIT_FAILURE);
-        }
-    if (n < 0)
-        perror("Error reading from source file");
+    ssize_t n;
+    while ((n = read(src, buffer, BUF_SIZE)) > 0)
+        write(dst, buffer, n);
 
     close(src);
     close(dst);
+    
     printf("File copied successfully!\n");
-    return EXIT_SUCCESS;
+    return 0;
 }
-
