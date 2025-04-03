@@ -54,9 +54,11 @@ def playfair_cipher(matrix, text, mode="encrypt"):
 
     return result
 
+
 key = input("Enter key: ")
 matrix = generate_key_matrix(key)
-plaintext = input("Enter plaintext: ").replace(" ","")
+
+plaintext = input("\nEnter plaintext: ").replace(" ","")
 ciphertext = playfair_cipher(matrix,plaintext,mode="encrypt")
 print(f"Ciphertext: {ciphertext}")
 

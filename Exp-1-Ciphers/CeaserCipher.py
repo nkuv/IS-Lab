@@ -9,13 +9,14 @@ def ceaser_encrypt(text,key):
             encrypted += char
     return encrypted
 
-plaintext = input("Enter a plaintext: ")
+
 key = int(input("Enter shift parameter: "))
+
+plaintext = input("\nEnter plaintext: ")
 ciphertext = ceaser_encrypt(plaintext,key)
 print("Encrypted Text:",ciphertext)
 
-ciphertext = input("\nEnter a ciphertext: ")
-key = int(input("Enter shift parameter: "))
+ciphertext = input("\nEnter ciphertext: ")
 plaintext = ceaser_encrypt(ciphertext,-key)
 print("Decrypted Text:",plaintext)
 

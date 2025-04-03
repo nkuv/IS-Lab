@@ -16,8 +16,10 @@ def vigenere(text, key, mode):
 
     return result
 
-text = input("Enter plaintext: ")
-key = input("Enter keyword: ")
+
+key = input("Enter key: ")
+
+text = input("\nEnter plaintext: ")
 encrypted = vigenere(text, key,"encrypt")
 print(f'Encrypted text: {encrypted}')
 
