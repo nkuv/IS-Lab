@@ -1,51 +1,55 @@
-// Write a C program that takes an integer N as input and creates two child processes to compute the sum of numbers from 1 to N in parallel.
-// First child process calculates the sum from 1 to N/2.
-// Second child process calculates the sum from (N/2 + 1) to N.
-// The parent process waits for both child processes to complete, retrieves their results, computes the total sum, and displays the final result.
-
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
+#include <sys/types.h>
 #include <sys/wait.h>
-#include <fcntl.h>
+#include <sys/stat.h>
+#include <dirent.h>
 
 int main() {
-    int n, sum1 = 0, sum2 = 0;
-    printf("Enter n: ");
-    scanf("%d", &n);
-
-    int pipe1[2], pipe2[2];
-    pipe(pipe1);
-    pipe(pipe2);
-
-    pid_t pid1 = fork(); 
-    if (pid1 == 0) { 
-        for (int i = 1; i <= n / 2; i++) sum1 += i;
-        write(pipe1[1], &sum1, sizeof(sum1)); 
-        close(pipe1[1]);
-        return 0;
+    pid_t pid = fork();
+    
+    if (pid < 0) {
+        perror("fork failed");
+        exit(EXIT_FAILURE);
+    } else if (pid == 0) {
+        // Child process
+        printf("Child PID: %d\n", getpid());
+        
+        // Using stat to get file info
+        struct stat file_stat;
+        if (stat("test.txt", &file_stat) == 0) {
+            printf("test.txt size: %ld bytes\n", file_stat.st_size);
+        } else {
+            perror("stat failed");
+        }
+        
+        // Using opendir/readdir to list directory
+        DIR *dir = opendir(".");
+        if (!dir) {
+            perror("opendir failed");
+            exit(EXIT_FAILURE);
+        }
+        
+        struct dirent *entry;
+        printf("Directory entries:\n");
+        while ((entry = readdir(dir)) != NULL) {
+            printf("%s\n", entry->d_name);
+        }
+        closedir(dir);
+        
+        // Close stdout and execute a command
+        close(STDOUT_FILENO); // Close standard output
+        printf("This won't be printed\n"); // This will fail
+        
+        execlp("ls", "ls", "-l", NULL); // Output suppressed due to closed stdout
+        perror("exec failed"); // This will print to stderr if exec fails
+        exit(EXIT_FAILURE);
+    } else {
+        // Parent process
+        printf("Parent PID: %d\n", getpid());
+        wait(NULL); // Wait for child to finish
+        printf("Parent: Child process completed.\n");
+        exit(EXIT_SUCCESS);
     }
-
-    pid_t pid2 = fork();
-    if (pid2 == 0) {
-        for (int i = (n / 2) + 1; i <= n; i++) sum2 += i;
-        write(pipe2[1], &sum2, sizeof(sum2)); 
-        close(pipe2[1]);
-        return 0;
-    }
-
-    close(pipe1[1]);
-    close(pipe2[1]);
-
-    read(pipe1[0], &sum1, sizeof(sum1));
-    read(pipe2[0], &sum2, sizeof(sum2));
-
-    waitpid(pid1, NULL, 0);
-    waitpid(pid2, NULL, 0);
-
-    printf("First child sum: %d\n", sum1);
-    printf("Second child sum: %d\n", sum2);
-    printf("Total sum: %d\n", sum1 + sum2);
-
-    return 0;
 }
-
