@@ -1,20 +1,18 @@
-import hashlib
+from hashlib import sha256
 
-s1 = input("Enter first string: ")
-h1 = hashlib.sha256(s1.encode()).hexdigest()
-print(f"H1 (hex): {h1}")
+msg1 = input("First message: ")
+msg2 = input("Second message: ")
 
-s2 = input("\nEnter second string: ")
-h2 = hashlib.sha256(s2.encode()).hexdigest()
-print(f"H2 (hex): {h2}")
+h1 = sha256(msg1.encode()).hexdigest()
+h2 = sha256(msg2.encode()).hexdigest()
 
-h1_bytes = bytes.fromhex(h1)
-h2_bytes = bytes.fromhex(h2)
+print("\nH1 =", h1)
+print("H2 =", h2)
 
-h1_int = int.from_bytes(h1_bytes,byteorder='big')
-h2_int = int.from_bytes(h2_bytes,byteorder='big')
+int1 = int(h1, 16)
+int2 = int(h2, 16)
 
-xor_result = h1_int ^ h2_int
-bit_difference = bin(xor_result).count('1')
+xor = int1 ^ int2
+bits_changed = bin(xor).count('1')
 
-print(f"\nNumber of differing bits: {bit_difference}")
+print("\nBit difference:", bits_changed)

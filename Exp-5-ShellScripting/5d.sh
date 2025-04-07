@@ -1,21 +1,11 @@
 #!/bin/bash
 
-hash_db="hashes.txt" 
+echo "Creating hashes..."
+sha256sum * > hashes.txt
 
-create_hashes() {
-    sha256sum * > "$hash_db"
-}
+cat hashes.txt
+sleep 2
 
-check_files() {
-    sha256sum -c "$hash_db" 
-}
+echo "Verifying files...."
+sha256sum -c hashes.txt
 
-case $1 in
-    create) create_hashes ;;
-    check)  check_files ;;
-esac
-
-
-# ./5d.sh create     # Generate hashes
-# ./5d.sh check      # Verify file integrity
-# hashes.txt is output file
