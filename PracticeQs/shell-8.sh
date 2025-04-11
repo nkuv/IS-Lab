@@ -1,6 +1,10 @@
 #!/bin/bash
 
-while read line; do
-    sudo useradd "$user"
-    echo "User added : $user"
+while read user; do
+    if id "$user" &>/dev/null; then
+        echo "$user already exists"
+    else 
+        sudo useradd "$user"
+        echo "User added : $user"
+    fi
 done < new.txt
